@@ -1,0 +1,55 @@
+﻿
+@{
+    ViewBag.Title = "Add";
+}
+
+
+<div class="content container-fluid">
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="row">
+            <div class="col">
+                <h3 class="page-title">Add Voucher</h3>
+
+            </div>
+        </div>
+    </div>
+    <!-- /Page Header -->
+
+    <div id="data"></div>
+
+
+</div>
+
+
+
+@section scripts{
+
+    <script src="~/assets/Components/Voucher.js"></script>
+    <script src="~/assets/Components/fileupload.js"></script>
+    <script type="text/javascript">
+
+
+
+        $(function () {
+
+            $('.li_menu').removeClass('active');
+            $('#li_person').addClass('active');
+
+            add();
+
+        });
+
+
+
+        function add() {
+            Form("Add", 0);
+        }
+
+
+
+
+
+    </script>
+}

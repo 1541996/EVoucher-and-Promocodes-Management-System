@@ -1,0 +1,107 @@
+﻿@model Infra.Services.PagedListClient<Data.ViewModels.VoucherViewModel>
+@using X.PagedList.Mvc.Core; @*import this so we get our HTML Helper*@
+@using X.PagedList; @*import this so we can cast our list to IPagedList (only necessary because ViewBag is dynamic)*@
+
+
+<div class="card card-table">
+    <div class="card-header">
+        <h4 class="card-title">Voucher List</h4>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover table-center mb-0">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Title</th>
+                        <th>Description</th>
+                        <th>Expired Date</th>
+                        <th>Amount</th>
+                        <th>Quantity</th>
+                        <th>Sold Qty</th>
+                        <th>Actions</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @if (Model.Results.Count() > 0)
+                    {
+                        
+
+                        int pagesize = ViewBag.pagesize;
+                        int pagestartno = ViewBag.page;
+                        int count = 0;
+                        count = (pagestartno - 1) * pagesize;
+                      
+                        foreach (var data in Model.Results)
+                        {
+                            count++;
+                            <tr>
+                                <td>@count</td>
+                                <td>
+                                    <h2 class="table-avatar">
+                                        <a>@data.Title</a>
+                                    </h2>
+                                </td>
+                                <td>@data.Description</td>
+                                <td>
+                                    <h2 class="table-avatar">
+
+                                        <a>@data.ExpiredDate.Value.ToString("dd MMM, yyyy")</a>
+                                    </h2>
+                                </td>
+                                <td>
+                                    $ @data.Amount
+
+                                </td>
+                                <td>
+                                    @data.Quantity
+                                </td>
+                                <td>
+                                    @data.UsedQuantity
+                                </td>
+                                <td>
+                                    <a href="/Voucher/Edit?ID=@data.VoucherID" class="btn btn-warning">Edit</a>
+                                    @if (data.IsActive == true)
+                                    {
+                                        <a onclick="SetActive('@data.VoucherID')" class="btn btn-success ml-2 text-white">Active</a>
+                                        <a href="/Voucher/CheckOut?ID=@data.VoucherID" class="btn btn-primary text-white ml-2">Check Out</a>
+                                        <a href="/Voucher/CheckOutV2?ID=@data.VoucherID" class="btn btn-primary text-white ml-2">CheckOut with Payment test</a>
+                                    }
+                                    else
+                                    {
+                                        <a onclick="SetActive('@data.VoucherID')" class="btn btn-danger text-white ml-2">InActive</a>
+                                    }
+
+                                </td>
+
+                            </tr>
+                        }
+
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="6" class="text-center">
+                                <h2 class="table-avatar">
+                                    <a>There is no data!!!!</a>
+                                </h2>
+                            </td>
+                        </tr>
+                    }
+
+
+
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-md-12">
+            <div class="pagedList" style="text-align:center">
+                @Html.PagedListPager(Model.Results, page => Url.Action("_list", "Person",
+ new { page }))
+            </div>
+        </div>
+    </div>
+</div>

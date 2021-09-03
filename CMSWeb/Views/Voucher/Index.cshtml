@@ -1,0 +1,152 @@
+﻿
+@{
+    ViewBag.Title = "Voucher";
+}
+
+
+<div class="content container-fluid">
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="row">
+            <div class="col-sm-5">
+                <h3 class="page-title">Voucher!</h3>
+                <a class="btn btn-primary" href="../Voucher/Add">Add Voucher</a>
+
+            </div>
+         
+        </div>
+    </div>
+    <!-- /Page Header -->
+
+
+    <div class="row">
+        <div class="col-md-12">
+
+            <div id="div_List"></div>
+
+
+
+
+        </div>
+    </div>
+
+</div>
+
+
+
+@section scripts{
+    <script type="text/javascript">
+        var page = 1;
+        var pagesize = 10;
+        var name;
+      
+
+        $(function () {
+            LoadMainList();
+            initPaging();
+
+            $('.li_menu').removeClass('active');
+            $('#li_person').addClass('active');
+
+        });
+
+
+
+
+        function initPaging() {
+            $("#div_List").on("click", ".pagedList a", function (e) {
+                e.preventDefault();
+                var $a = $(this).attr("href");
+                try {
+                    var pageurl = $a.split(/=/);
+                    page = pageurl[1];
+                    if (page == null) {
+                        page = 1;
+                    }
+                }
+                catch (e) {
+                    page = 1;
+                }
+                LoadMainList();
+            });
+        }
+
+
+
+        function keySearch() {
+
+            setTimeout(() => {
+                Search();
+            }, 300);
+        }
+
+         function Search() {
+             name = $('#txt_Name').val();
+
+             LoadMainList();
+          }
+
+         var currentRequest;
+        function LoadMainList() {
+            loading('div_List');
+
+             currentRequest = $.ajax({
+                    cache: false,
+                    url: '@Url.Action("_list", "Voucher")',
+                    data: {
+                     name: name,
+                         pagesize: pagesize, page: page
+                     },
+                    beforeSend: function () {
+                        console.log(currentRequest);
+                        if (currentRequest != null) {
+                            console.log(currentRequest);
+                            currentRequest.abort();
+                        }
+                    },
+                    success: function (result) {
+                        $('#div_List').empty().append(result);
+                    },
+                    complete: function () {
+
+                    }
+                });
+        }
+
+
+          function SetActive(ID) {
+               $.ajax({
+                    cache: false,
+                    url: '@Url.Action("SetActive", "Voucher")',
+                    data: {
+                        ID: ID
+                     },
+                    beforeSend: function () {
+                       
+                    },
+                    success: function (result) {
+                        alert(result);
+                    },
+                   complete: function () {
+                       LoadMainList();
+                    }
+                });
+
+
+          }
+
+
+        function loading(id) {
+            $('#' + id).empty().append('<div class="text-center"><div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div></div>')
+        }
+
+
+
+
+
+
+
+    </script>
+}
+

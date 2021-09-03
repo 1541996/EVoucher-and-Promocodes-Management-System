@@ -1,0 +1,36 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_LoginLayout.cshtml";
+}
+
+<div class="loginbox">
+    @*<div class="login-left">
+        <img class="img-fluid" src="assets/img/logo-white.png" alt="Logo">
+    </div>*@
+    <div class="login-right">
+        <div class="login-right-wrap">
+            <h1>Login</h1>
+            <p class="account-subtitle">Access to our dashboard</p>
+            <p class="text-center">Testing Login info:</p>
+            <p class="">UserName: <span class="text-primary">test1</span> </p>
+            <p class="">Password: <span class="text-primary">password1</span> </p>
+
+            <!-- Form -->
+            <form action="/Login/Index" method="post">
+                <div class="form-group">
+                    <input class="form-control" type="text" name="Username" placeholder="Name">
+                </div>
+                <div class="form-group">
+                    <input class="form-control" type="text" name="Password" placeholder="Password">
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-primary btn-block" type="submit">Login</button>
+                </div>
+            </form>
+            <!-- /Form -->
+
+
+        </div>
+    </div>
+</div>

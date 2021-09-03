@@ -1,0 +1,418 @@
+﻿@{
+
+    ViewBag.Title = "CheckOut";
+}
+
+@model Data.ViewModels.PaymentViewModel
+
+
+<div class="modal fade" id="purchase_modal" aria-hidden="true" role="dialog">
+    <div class="modal-dialog modal-lg modal-dialog-centered" style="max-width:1000px" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Your Purchases</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="table-responsive">
+                    <table class="table table-hover table-center mb-0">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Voucher</th>
+                                <th>Payment</th>
+                                <th>Promocodes</th>
+                                <th>Amount</th>
+                                <th>Discount</th>
+
+                                <th>Total Amount</th>
+                                <th>QrCode</th>
+
+
+                            </tr>
+                        </thead>
+                        <tbody id="tbody_purchase">
+                        </tbody>
+                    </table>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade" id="QrScanModal" aria-hidden="true" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">QR Codes</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div id="qrUrl">
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="content container-fluid">
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="row">
+            <div class="col-sm-5">
+                <h3 class="page-title">CheckOut with payment test!</h3>
+                <a href="#purchase_modal" data-toggle="modal" class="btn btn-primary mt-2">Purchase List</a>
+
+            </div>
+
+
+
+        </div>
+    </div>
+    <!-- /Page Header -->
+
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Set Up Voucher</h4>
+                </div>
+                <div class="card-body">
+
+                    @using (Html.BeginForm("Checkout", "Voucher", FormMethod.Post, new { id = "Form" }))
+                    {
+                        <div class="form-group row">
+                            <label class="col-form-label col-md-2">Voucher Title</label>
+                            <div class="col-md-10">
+
+                                @Html.TextBoxFor(a => a.VoucherTitle, new
+                                {
+                                    placeholder = "",
+                                    @id = "txt_title",
+                                    @class = "form-control",
+                                    @autoComplete = "off",
+                                    @readOnly = "readOnly",
+
+
+                                })
+                                @*<div id="errtxt_Name" class="error-message"></div>*@
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-form-label col-md-2">Amount</label>
+                            <div class="col-md-10">
+                                @Html.TextBoxFor(a => a.Amount, new
+                           {
+                               @id = "txt_amount",
+                               placeholder = "",
+                               @class = "form-control",
+                               @autoComplete = "off",
+                               @readOnly = "readOnly",
+
+                           })
+
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-form-label col-md-2">Available Quantity</label>
+                            <div class="col-md-10">
+                                @Html.TextBoxFor(a => a.AvailableQuantity, new
+                               {
+                                   @id = "txt_amount",
+                                   placeholder = "",
+                                   @class = "form-control",
+                                   @autoComplete = "off",
+                                   @readOnly = "readOnly",
+
+                               })
+
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-form-label col-md-2">Quantity</label>
+                            <div class="col-md-10">
+                                @Html.TextBoxFor(a => a.Quantity, new
+                                {
+                                    placeholder = "",
+                                    @id = "txt_qty",
+                                    @class = "form-control",
+                                    @autoComplete = "off",
+
+                                })
+
+                            </div>
+                        </div>
+
+
+                        <div class="form-group row">
+                            <label class="col-form-label col-md-2">Customer Name</label>
+                            <div class="col-md-10">
+
+                                @Html.TextBoxFor(a => a.CustomerName, new
+                               {
+                                   placeholder = "",
+                                   @id = "txt_cusname",
+                                   @class = "form-control",
+                                   @autoComplete = "off",
+                                   @required = "required"
+
+                               })
+                                @*<div id="errtxt_Name" class="error-message"></div>*@
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-form-label col-md-2">Customer Phone</label>
+                            <div class="col-md-10">
+
+                                @Html.TextBoxFor(a => a.CustomerPhone, new
+                               {
+                                   placeholder = "",
+                                   @id = "txt_cusphone",
+                                   @class = "form-control",
+                                   @autoComplete = "off",
+                                   @required = "required"
+
+                               })
+                                @*<div id="errtxt_Name" class="error-message"></div>*@
+                            </div>
+                        </div>
+
+
+                        <div class="form-group row">
+                            <label class="col-form-label col-md-2">Payment Type</label>
+                            <div class="col-md-10">
+
+                                <select class="form-control" required id="DD_Payment">
+                                    <option value="">Choose Payment</option>
+
+                                </select>
+
+
+
+                                <input type="hidden" name="PaymentMethodID" id="PaymentMethodID" />
+                                <input type="hidden" name="PaymentMethodName" id="PaymentMethodName" />
+
+
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-form-label col-md-2">Discount</label>
+                            <div class="col-md-10">
+                                <h6 class="mt-2" id="txt_discount"></h6>
+
+                                <input type="hidden" id="discount" name="Discount" />
+
+                            </div>
+                        </div>
+
+
+                        <div class="form-group row">
+                            <label class="col-form-label col-md-2">Test With this payment dummy</label>
+                            <div class="col-md-10">
+                                <h6 class="mt-2">Card Number: 4242 4242 4242 4242 </h6>
+                                <h6 class="mt-2">MM/YY: 08 / 24 </h6>
+                                <h6 class="mt-2">CVC: 123 </h6>
+                                <h6 class="mt-2">ZIP: 94107 </h6>
+
+
+
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-form-label col-md-2">Payment</label>
+                            <div class="col-md-10">
+                                <div id="card-element"><!--Stripe.js injects the Card Element--></div>
+
+                            </div>
+                        </div>
+
+
+
+
+                        @Html.HiddenFor(a => a.VoucherID)
+                        @Html.HiddenFor(a => a.PromoCodes)
+                        //  @Html.HiddenFor(a => a.PaymentMethodID)
+                        // @Html.HiddenFor(a => a.PaymentMethodName)
+
+
+                        <div class="text-right">
+                            <button type="submit" class="btn btn-primary">Check Out</button>
+                        </div>
+
+                        @*<button id="submit" type="submit">
+                            <div class="spinner hidden" id="spinner"></div>
+                            <span id="button-text">Check Out</span>
+                        </button>*@
+
+                    }
+
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+
+
+
+
+
+@section scripts{
+
+    <script src="https://js.stripe.com/v3/"></script>
+
+    <script src="~/js/kendo.min.js"></script>
+    <script src="~/js/payment.js"></script>
+    <script type="text/javascript">
+
+
+        var card;
+        $(function () {
+         
+
+            bindPaymentDD();
+
+            $('#Form').submit(function (e) {
+                $('.btn').prop("disabled", true);
+                e.preventDefault();
+
+                var name = $('#txt_cusname').val();
+                var phone = $('#txt_amount').val();
+
+                $(".error").remove();
+
+                if (name.length < 1) {
+                    $('#txt_cusname').after('<span class="error">This field is required</span>');
+                    return;
+                }
+
+                if (phone.length < 1) {
+                    $('#txt_cusphone').after('<span class="error">This field is required</span>');
+                    return;
+                }
+
+
+
+                $.ajax({
+                    cache: false,
+                    url: '/Voucher/makeactualpayment',
+                    type: "Post",
+                    data: $(this).serialize(),
+                    beforeSend: function () {
+
+                        $('.btn').prop("disabled", true);
+
+                    },
+                    success: function (myData) {                      
+                        if (myData.status == "Success") {
+                            payWithCard(stripe, card, myData.secretkey, myData.list);
+
+                        }else {
+                            alert(myData.status + "  " + myData.message);
+                        }
+
+                    },
+                    complete: function () {
+
+                        $('.btn').prop("disabled", false);
+
+                    }
+                });
+            });
+
+        });
+
+
+         function bindPaymentDD() {
+            $.ajax({
+                cache: false,
+                url: '@Url.Action("GetPaymentMethodList", "Voucher")',
+
+                beforeSend: function () {
+
+                },
+                success: function (result) {
+                    console.log(result);
+                    $('#DD_Payment').empty();
+                    $('#DD_Payment').append('<option value="">Choose Payment</option>');
+                    for (var i = 0; i < result.length; i++) {
+                        $('#DD_Payment').append('<option data-discount="' + result[i].Discount + '" value="' + result[i].ID + '">' + result[i].Name + '</option>')
+                    };
+
+
+
+                    $('#DD_Payment').on('change', function () {
+                        var id = $('#DD_Payment :selected').val();
+                        var name = $('#DD_Payment :selected').text();
+                        $('#PaymentMethodID').val(id);
+                        $('#PaymentMethodName').val(name);
+                        var discount = $('#DD_Payment').find(':selected').attr('data-discount')
+                       // alert(discount);
+                        if (discount != 0 && discount != "" && discount != undefined) {
+                            $('#txt_discount').text('You will get ' + discount + '% discount for ' + name + ' payment per voucher');
+                            $('#discount').val(discount);
+                        } else {
+                            $('#discount').val("");
+                        }
+
+
+                    });
+
+                },
+                complete: function () {
+                }
+            });
+        }
+
+
+
+        function QRScan(promocodes) {
+            $("#qrUrl").empty().kendoQRCode({
+                value: promocodes,
+                errorCorrection: "M",
+                size: 190,
+                //  size: 190,
+                //border: {
+                //    color: "#000000",
+                //    width: 5
+                //}
+                //border: {
+                //    color: "#000000",
+                //    width: 5
+                //}
+            })
+            $('#QrScanModal').modal({ backdrop: 'static' }, 'show');
+
+        }
+
+
+    </script>
+}

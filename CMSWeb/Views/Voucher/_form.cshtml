@@ -1,0 +1,139 @@
+﻿@model Data.Models.tbvoucher
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">Set Up Voucher</h4>
+            </div>
+            <div class="card-body">
+
+                @using (Html.BeginForm("upsert", "Voucher", FormMethod.Post, new { id = "Form" }))
+                {
+                    <div class="form-group row">
+                        <label class="col-form-label col-md-2">Photo</label>
+                        <div class="col-md-10">
+                            <div class="form__img">
+                                <label for="form__img-upload">Upload photo</label>
+                                <input id="form__img-upload" name="form__img-upload" type="file" class="file_voucher" accept=".png, .jpg, .jpeg" onchange="ShowImagePreview(this,document.getElementById('imagePreview'), 'voucher')">
+                                <img id="imagePreview" src="@Model.PhotoUrl" alt="" style="width:200px;height:200px;">
+                            </div>
+                            <input type="hidden" id="photo_voucher" name="Photo" />
+
+                        </div>
+
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-form-label col-md-2">Title</label>
+                        <div class="col-md-10">
+
+                            @Html.TextBoxFor(a => a.Title, new
+                       {
+                           placeholder = "",
+                           @id = "txt_title",
+                           @class = "form-control",
+                           @autoComplete = "off",
+                           @required = "required"
+
+                       })
+                            @*<div id="errtxt_Name" class="error-message"></div>*@
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-form-label col-md-2">Amount</label>
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(a => a.Amount, new
+                       {
+                           @id = "txt_amount",
+                           placeholder = "",
+                           @class = "form-control",
+                           @autoComplete = "off",
+                           @required = "required"
+
+                       })
+
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-form-label col-md-2">Quantity</label>
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(a => a.Quantity, new
+                       {
+                           placeholder = "",
+                           @id = "txt_qty",
+                           @class = "form-control",
+                           @autoComplete = "off",
+                          
+
+                       })
+
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-form-label col-md-2">Expired Date</label>
+                        <div class="col-md-10">
+                            @{
+
+                                if (Model.ExpiredDate != null)
+                                {
+                                    <input type="text" autoComplete="off"
+                                           readonly="readonly"
+                                           class="form-control date" name="ExpiredDate" id="txt_date"
+                                           value="@Model.ExpiredDate.Value.ToShortDateString()" required />
+                                }
+                                else
+                                {
+                                    <input type="text" autoComplete="off"
+                                           readonly="readonly"
+                                           class="form-control date" name="ExpiredDate" id="txt_date" required />
+                                }
+
+                            }
+
+
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-form-label col-md-2">Description</label>
+                        <div class="col-md-10">
+                            @Html.TextAreaFor(a => a.Description, new
+                           {
+                               placeholder = "",
+                               @id = "txt_desc",
+                               @class = "form-control",
+                               @autoComplete = "off",
+
+                           })
+
+                        </div>
+                    </div>
+
+
+
+
+                    @Html.HiddenFor(a => a.ID)
+                    @Html.HiddenFor(a => a.Accesstime)
+                    @Html.HiddenFor(a => a.Type)
+                    @Html.HiddenFor(a => a.IsActive)
+                    @Html.HiddenFor(a => a.UsedQuantity)
+
+
+                    <div class="text-right">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+
+
+
+                }
+
+
+            </div>
+        </div>
+
+    </div>
+</div>
